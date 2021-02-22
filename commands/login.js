@@ -1,5 +1,6 @@
 const crypto = require('crypto');
-const lib = require('../lib');
+const helpers = require('../lib/helpers');
+const login = require('../lib/login');
 
 module.exports = (program) =>
   program
@@ -8,8 +9,8 @@ module.exports = (program) =>
       const domain = process.env.DOMAIN;
       const clientId = process.env.CLIENT_ID;
 
-      const { verifier, challenge } = lib.getChallengeAndVerifier();
-      const state = lib.base64URLEncode(crypto.randomBytes(32));
+      const { verifier, challenge } = helpers.getChallengeAndVerifier();
+      const state = helpers.base64URLEncode(crypto.randomBytes(32));
       const url = new URL(`${domain}/authorize`);
 
       url.searchParams.append('client_id', clientId);
@@ -22,11 +23,11 @@ module.exports = (program) =>
       url.searchParams.append('prompt', 'login');
 
       try {
-        const result = await lib.loginWithLocalhost({
+        const result = await login.loginWithLocalhost({
           authUrl: url.href, verifier, state, domain, clientId
         });
 
-        console.log(result);
+        console.log('Now you can store the tokens somewhere safe and resilient, until they are expired', { result })
       } catch (e) {
         console.log(e)
       }
