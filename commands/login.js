@@ -5,10 +5,14 @@ module.exports = (program) =>
   program
     .command('login')
     .action(async () => {
+      const domain = process.env.DOMAIN;
+      const clientId = process.env.CLIENT_ID;
+
       const { verifier, challenge } = lib.getChallengeAndVerifier();
       const state = lib.base64URLEncode(crypto.randomBytes(32));
-      const url = new URL(process.env.AUTH_URL);
-      url.searchParams.append('client_id', process.env.CLIENT_ID);
+      const url = new URL(`${domain}/authorize`);
+
+      url.searchParams.append('client_id', clientId);
       url.searchParams.append('response_type', 'code');
       url.searchParams.append('code_challenge', challenge);
       url.searchParams.append('code_challenge_method', 'S256');
@@ -16,6 +20,14 @@ module.exports = (program) =>
       url.searchParams.append('scope', 'openid profile');
       url.searchParams.append('state', state);
       url.searchParams.append('prompt', 'login');
-      const result = await lib.loginWithLocalhost(url, verifier, state);
-      console.log(result);
+
+      try {
+        const result = await lib.loginWithLocalhost({
+          authUrl: url.href, verifier, state, domain, clientId
+        });
+
+        console.log(result);
+      } catch (e) {
+        console.log(e)
+      }
     });
