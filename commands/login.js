@@ -9,17 +9,18 @@ module.exports = (program) =>
       const domain = process.env.DOMAIN;
       const clientId = process.env.CLIENT_ID;
 
-      const { verifier, challenge } = helpers.getChallengeAndVerifier();
-      const state = helpers.base64URLEncode(crypto.randomBytes(32));
-      const url = new URL(`${domain}/authorize`);
+      const { verifier, challenge, state } = helpers.getOAuthParameters();
+      const url = new URL(`${domain}/authorize`)
+
+      url.searchParams.append('response_type', 'code');
 
       url.searchParams.append('client_id', clientId);
-      url.searchParams.append('response_type', 'code');
       url.searchParams.append('code_challenge', challenge);
+      url.searchParams.append('state', state);
+
       url.searchParams.append('code_challenge_method', 'S256');
       url.searchParams.append('redirect_uri', 'http://localhost:9000');
       url.searchParams.append('scope', 'openid profile');
-      url.searchParams.append('state', state);
       url.searchParams.append('prompt', 'login');
 
       try {
@@ -27,7 +28,7 @@ module.exports = (program) =>
           authUrl: url.href, verifier, state, domain, clientId
         });
 
-        console.log('Now you can store the tokens somewhere safe and resilient, until they are expired', { result })
+        console.log('Now you can store the tokens somewhere safe and resilient.', { result })
       } catch (e) {
         console.log(e)
       }
