@@ -1,0 +1,11 @@
+{
+  "name": "auth0-cli-protection",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^7.1.0",
+    "open": "^7.4.2",
+    "url": "^0.11.0"
+  }
+}
