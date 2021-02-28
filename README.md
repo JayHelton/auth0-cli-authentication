@@ -1,6 +1,6 @@
 # Authorization Code with PKCE CLI Authentication
 
-## ⚠️ Unofficial, Its not a production flow, Do not use! ⚠️
+## ⚠️ Unofficial, Its not a production flow, Do not use! Check out the [Device Authorization Flow](https://auth0.com/docs/flows/device-authorization-flow) ⚠️
 
 Install deps:
 ```bash
@@ -24,6 +24,3 @@ Then, the CLI opens the browsers and directs the user the /authorize endpoint fo
 Since the server only exists for this small interaction on the front channel, it quickly exchanges the authorization code and the code verifier for the access token and then kills the http server.
 
 Then you can do whatever you want with the tokens, like store them in a dot file, or persist them to a local db.
-
-## What's Next?
-If this ends up being a viable and accepted way to authenticate a CLI, I think I will put more time into the code quality and post token storage for the example... Or I'll hand it over to someone else for that. 🤣
