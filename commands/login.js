@@ -1,6 +1,6 @@
-const crypto = require('crypto');
 const helpers = require('../lib/helpers');
 const login = require('../lib/login');
+const jwt_decode = require('jwt-decode');
 
 module.exports = (program) =>
   program
@@ -28,7 +28,11 @@ module.exports = (program) =>
           authUrl: url.href, verifier, state, domain, clientId
         });
 
-        console.log('Now you can store the tokens somewhere safe and resilient.', { result })
+        console.log({
+          accessToken: result.access_token,
+          user: jwt_decode(result.id_token),
+        });
+        
       } catch (e) {
         console.log(e)
       }
